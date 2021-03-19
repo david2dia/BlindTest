@@ -33,6 +33,26 @@ class GuesserDisplay extends Component {
       tracksPlayed: []
     };
     this.audio = React.createRef();
+
+
+    let keys = {};
+    onkeydown = onkeyup =  (e) => {
+      keys[e.which] = e.type === 'keydown';
+      if (keys[32]) {
+        if (this.state.isTrackPlaying) {
+          this.pauseTrack();
+        } else {
+          this.playTrack();
+        }
+      }
+      else if (keys[82]) {
+       this.toggleRevealTrack();
+      }
+      else if (keys[39]) {
+        this.startBlindTest();
+      }
+    }
+
   }
 
   getRandomTrack = () => {
@@ -78,7 +98,8 @@ class GuesserDisplay extends Component {
             this.setState({ isTrackRevealed: false, isTrackPlaying: false });
           });
       }
-      this.setState({ isTrackRevealed: false, isTrackPlaying: true });
+      //todo:: isTrackRevealed: false default
+      this.setState({ isTrackRevealed: true, isTrackPlaying: true });
     });
   };
 
@@ -105,6 +126,10 @@ class GuesserDisplay extends Component {
 
   revealTrack = () => {
     this.setState({ isTrackRevealed: true });
+  };
+
+  toggleRevealTrack = () => {
+    this.setState({ isTrackRevealed: !this.state.isTrackRevealed });
   };
 
   setTimer = () => {
@@ -253,19 +278,19 @@ class GuesserDisplay extends Component {
         <Button
           style={{
             visibility:
-              this.state.isQuizStarted && !this.state.isTrackRevealed
+              this.state.isQuizStarted
                 ? 'visible'
                 : 'hidden'
           }}
           variant="outline-primary reveal-btn"
-          onClick={this.revealTrack}
+          onClick={this.toggleRevealTrack}
         >
           <FontAwesomeIcon icon={faEyeSlash} /> {t('reveal')}
         </Button>
         <div
           style={{
             visibility:
-              this.state.isQuizStarted && !this.state.isTrackRevealed
+              this.state.isQuizStarted
                 ? 'visible'
                 : 'hidden'
           }}
